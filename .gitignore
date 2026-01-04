@@ -1,0 +1,26 @@
+# Environment variables and configuration files with secrets
+.env
+.env.local
+.env.*.local
+appsettings.json
+appsettings.*.json
+
+# Build results
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.log
+
+# Visual Studio
+.vs/
+*.userprefs
+
+# Rider
+.idea/
+*.sln.iml
+
+# NuGet Packages
+*.nupkg
+packages/
