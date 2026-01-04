@@ -44,6 +44,9 @@ namespace SK_DEV
                 PresencePenalty = 0
             };
 
+            // chat history reducer
+            var reducer = new ChatHistoryTruncationReducer(targetCount: 2);
+
             while (true)
             {
                 Console.Write("\nEnter your prompt : ");
@@ -63,6 +66,13 @@ namespace SK_DEV
                 OpenAI.Chat.ChatTokenUsage usage = ((OpenAI.Chat.ChatCompletion)response.InnerContent).Usage;
                 Console.WriteLine(response.Content);
                 Console.WriteLine($"\nTokens Used: Prompt - {usage.InputTokenCount}, Output - {usage.OutputTokenCount}, Total - {usage.TotalTokenCount}");
+
+                var recducedMessages = await reducer.ReduceAsync(history);
+
+                if (recducedMessages is not null)
+                {
+                    history = new(recducedMessages);
+                }
             }
 
         }
