@@ -45,7 +45,8 @@ namespace SK_DEV
             };
 
             // chat history reducer
-            var reducer = new ChatHistoryTruncationReducer(targetCount: 2);
+            //var reducer = new ChatHistoryTruncationReducer(targetCount: 2);
+            var reducer = new ChatHistorySummarizationReducer(chatCompletionService, 2, 2);
 
             while (true)
             {
