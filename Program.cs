@@ -30,6 +30,9 @@ namespace SK_DEV
 
             var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
+            // creating a chat history
+            var history = new ChatHistory();
+
             // this only works with openAI connector
             OpenAIPromptExecutionSettings settings = new()
             {
@@ -51,7 +54,12 @@ namespace SK_DEV
                     break;
                 }
 
-                var response = await chatCompletionService.GetChatMessageContentAsync(prompt, settings);
+                history.AddUserMessage(prompt);
+                var response = await chatCompletionService.GetChatMessageContentAsync(history, settings);
+
+                // add to the chat history
+                history.Add(response);
+
                 OpenAI.Chat.ChatTokenUsage usage = ((OpenAI.Chat.ChatCompletion)response.InnerContent).Usage;
                 Console.WriteLine(response.Content);
                 Console.WriteLine($"\nTokens Used: Prompt - {usage.InputTokenCount}, Output - {usage.OutputTokenCount}, Total - {usage.TotalTokenCount}");
