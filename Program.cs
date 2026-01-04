@@ -58,14 +58,21 @@ namespace SK_DEV
                     break;
                 }
 
+                string fullMessage = string.Empty;
+                OpenAI.Chat.ChatTokenUsage usage = null;
+
                 history.AddUserMessage(prompt);
-                var response = await chatCompletionService.GetChatMessageContentAsync(history, settings);
+                await foreach (StreamingChatMessageContent responseChunk in chatCompletionService.GetStreamingChatMessageContentsAsync(history, settings))
+                {
+                    Console.Write(responseChunk.Content);
+                    fullMessage += responseChunk.Content;
+                    usage = ((OpenAI.Chat.StreamingChatCompletionUpdate)responseChunk.InnerContent).Usage;
+
+                }
 
                 // add to the chat history
-                history.Add(response);
-
-                OpenAI.Chat.ChatTokenUsage usage = ((OpenAI.Chat.ChatCompletion)response.InnerContent).Usage;
-                Console.WriteLine(response.Content);
+                history.AddAssistantMessage(fullMessage);
+                
                 Console.WriteLine($"\nTokens Used: Prompt - {usage.InputTokenCount}, Output - {usage.OutputTokenCount}, Total - {usage.TotalTokenCount}");
 
                 var recducedMessages = await reducer.ReduceAsync(history);
