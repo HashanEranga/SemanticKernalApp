@@ -48,6 +48,11 @@ namespace SK_DEV
             //var reducer = new ChatHistoryTruncationReducer(targetCount: 2);
             var reducer = new ChatHistorySummarizationReducer(chatCompletionService, 2, 2);
 
+            foreach (var attr in chatCompletionService.Attributes)
+            {
+                Console.WriteLine($"{attr.Key} : {attr.Value}");
+            }
+
             while (true)
             {
                 Console.Write("\nEnter your prompt : ");
